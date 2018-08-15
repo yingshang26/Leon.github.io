@@ -60,4 +60,52 @@ Paket在**paket.dependencies**的下一层目录中寻找所有编译项目的**
 如果想更新一个文件，你需要使用带**--force**参数的**paket install**命令或**paket update**命令。    
 为了减少强制安装依赖文件的数量，下载**http**依赖文件时使用groups会很有帮助。
 ## paket.template文件
-**paket.template**文件用来明确使用**paket pack**命令创建**.nupkg**包的规则。
+**paket.template**文件用来明确使用**paket pack**命令创建**.nupkg**包的规则。    
+**tpye**说明符必须在template文件的第一行，他有两个可能的值：
+- **file**:所有生产**.nupkg**包的的信息需要包含在template文件中
+- **project**:Paket 会寻找匹配的项目文件，然后从项目中推到依赖和元数据
+匹配的项目和template文件的必须在同一目录下。如果目录下只有一个项目，template文件可以命名为**paket.template**，否则template文件必须以以项目文件名+**.paket.template**命名。    
+例如：    
+    `Paket.Project.fsproj`    
+    `Paket.Project.fsproj.paket.template`    
+### 例子
+#### 例1
+使用**type project**的**paket.template**文件可能如下所示：    
+`1: type project`    
+`2: licenseUrl http://opensource.org/licenses/MIT`    
+用这个template创建一个**.nupkg**包文件    
+* 包的名字为**Test.Paket.Package.[Version].nupkg**,
+- **Version, Author和Description**从程序集特性中获取，
+- 在包的**lib**目录下包含**d$(OutDir)\\$(ProjectName).* **路径下的所有文件(项目输出目录的所有文件)
+* 引用所有被项目引用的包，
+* 包括包引用，
+* 包括对解决方案下其他项目，要求这个项目拥有一个**paket.template**文件    
+
+ #### 例2
+ 使用**type project**的**paket.template**文件可能如下所示：    
+ `1: type file`    
+ `2：id Test.Paket.Package`     
+ `3: version 1.0`    
+ `4: authors Michael Newton`    
+ `5: description`    
+ `6:   description of this test package`    
+ `7: files`    
+ `8:   src/Test.Paket.Package/bin/Debug ==> lib`    
+ 这个template文件会创建一个名为**Test.Paket.Package.<version>.nupkg**的包文件，包文件的**lib**路径下包含**src/Test.Paket.Package/bin/Debug**目录下的内容。
+
+ ### 通用元数据
+ 通用元数据可以以两种方式书写；要么在单独行上以属性名为前缀（属性名不区分大小写），要么在只有属性名的行后跟随一个缩进块。    
+ 例如：    
+ `1: description This is a valid Description`    
+ `2: `    
+ `3: DESCRIPTION`     
+ `4:   So is this`     
+ `5:   description`     
+ `6:`     
+ `7: description This would`     
+ `8:   cause an error`    
+创建一个**.nupkg**包，template文件中必须包含4个字段，以项目为基础的template文件可以忽略，但会以以下方式推断出来：
+- **id**：包的ID(也决定了包的文件名)。如果在以项目为基础的template文件中被忽略了，包的文件名会以反射得到的程序及名字命名。
+- **version**
+
+    
