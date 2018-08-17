@@ -27,6 +27,13 @@ Paket支持以下资源类型：
 * 严格的引用    
 Paket通常在项目文件中添加项目各自的**paket.references**中列出的直接和间接依赖。但在严格模式下，Paket只会添加直接依赖，你需要自己添加间接依赖到**paket.references**。 （严格模式下不会下载间接依赖的包吗？放到项目文件夹的是什么东西） 
 注意解决方案层不会受这个选项影响
+* 预发布版本
+如果你想依赖预发布版本，Paket能够协助你。与NuGet不同，Paket允许依赖不同的预发布通道：    
+`1: nuget Example >= 1.2.3 alpha`//At least 1.2.3 including alpha versions    
+`2: nuget Example >= 2 beta rc`    //At least 2.0 including rc and beta versions    
+`3: nuget Example >= 3 rc`    //At least 3.0 including rc versions    
+`4：nuget Example >= 3 prerelease`    //At least 3.0 including all prerelease versions
+
 
 ## paket.references
 **paket.references**文件用于明确仓库中的编译项目需要安装哪些依赖。Paket决定每个编译项目引用的依赖项存放在项目对应**paket.references**文件所在目录。    
@@ -105,7 +112,24 @@ Paket在**paket.dependencies**的下一层目录中寻找所有编译项目的**
  `7: description This would`     
  `8:   cause an error`    
 创建一个**.nupkg**包，template文件中必须包含4个字段，以项目为基础的template文件可以忽略，但会以以下方式推断出来：
-- **id**：包的ID(也决定了包的文件名)。如果在以项目为基础的template文件中被忽略了，包的文件名会以反射得到的程序及名字命名。
-- **version**
+- **id**：**.nupkg**包的ID(也决定了包的文件名)。如果在以项目为基础的template文件中被忽略了，包的文件名会以反射得到的程序及名字命名。
+- **version**：**.nupkg**包的版本。如果在以项目为基础的template文件中被忽略了，可以通过反射获取**AssemblyInformationalVersionAttribute**值，**or if that is missing the AssemblyVersionAttribute**.
+- **authors**:**.nupkg**包的多个作者可以通过逗号分开，如果在以项目为基础的template文件中被忽略了，可以从**AssemblyCompanyAttribute**值中推断出来。
+- **description**:作为**.nupkgg*包的介绍呈现。如果没说明，可以从**AssemblyDescriptionAttribute**值中推断出来。    
+其他通用元数据属性都是可选的，直接和**.nupkg**包中**.nuspec**文件中的字段对应。
+- **title**:
+- **Owners**:
+...未完待续    
+#### 依赖及要打包的文件
+#### 要打包的文件
+#### 引用的项目
+利用**include-referenced-projects**命令行参数，可以告诉Paket在打包时是否需要将引用的项目包含到包中。
+####框架程序集引用
+#### 依赖
+#### PDB文件
+通过**include-pdbs**命令行参数，可以告诉Paket是否需要将PDBs打包到包中。
+`1: paket pack --include-pdbs true`
 
+### 注解
+以**#** 或 **//**开头的行会在解析时会被当作注释并忽略。行结尾的注释只允许在所有的依赖限制行使用。
     
