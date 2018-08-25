@@ -128,7 +128,8 @@ Paket在**paket.dependencies**的下一层目录中寻找所有编译项目的**
 #### 依赖
 #### PDB文件
 通过**include-pdbs**命令行参数，可以告诉Paket是否需要将PDBs打包到包中。
-`1: paket pack --include-pdbs true`
+`1: paket pack --include-pdbs true`    
+这只有在使用以项目为基础的**paket.template**时才起作用。
 
 ### 注解
 以**#** 或 **//**开头的行会在解析时会被当作注释并忽略。行结尾的注释只允许在所有的依赖限制行使用。
