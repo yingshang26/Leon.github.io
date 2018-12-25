@@ -466,6 +466,8 @@ Ctrl+C会终止下载进程。when fresh copy of paket.exe was found,bootstrappe
  
 如果**paket.lock**文件不存在，**paket restore**操作会失败。这种情况下不会下载任何依赖包。学习如何创建**paket.lock**文件，请查看**paket install**和**paket update**
 
+你好
+
  
 
  
